@@ -32,7 +32,7 @@ int main(){
     std::cout << "Which base are your number? ";
     std::cin >> base_num;
 
-    std::cout << "Choose a base you wanna convert: " << '\n';
+    std::cout << "Choose a base you want to convert: " << '\n';
     std::cin >> base;
     
     std::vector<int> result = base_natural(num, base_num, base);
