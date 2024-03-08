@@ -20,8 +20,10 @@ std::vector<char> base_1(int num){
     return result;
 }
 
-std::vector<int> base_natural(int num, int base_num, int base){
+std::pair<std::vector<int>, std::string> base_natural(int num, int base_num, int base){
     std::vector<int> result;
+    std::string result_str;
+    std::string alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvxyz+/=";
     if(base_num != 10 && base == 10){
         int dum = 0;
         for(int i = 0; num > 0; i++){
@@ -32,19 +34,25 @@ std::vector<int> base_natural(int num, int base_num, int base){
         result.push_back(dum);
     } else {
         while(num >= 1){
-            result.push_back(num % base);
-            num /= base;
+            if(base >= 11 && base <= 64){
+                result_str.push_back(alphabet[num % base]);
+                num /= base;
+            } else{
+                result.push_back(num % base);
+                num /= base;
+            }
         }
         std::reverse(result.begin(), result.end());
+        std::reverse(result_str.begin(), result_str.end());
     }
-    return result;
+    return {result, result_str};
 };
 
 std::vector<int> base_quotient(int num, int numerator, int denominator){
     std::vector<int> result;
     int base_10 = 10;
     if(numerator == 1){
-        result = base_natural(num, base_10, denominator);
+        result = base_natural(num, base_10, denominator).first;
         std::reverse(result.begin(), result.end());
     }
     else if(numerator > denominator){
@@ -85,19 +93,29 @@ int main(){
             std::cin >> base;
 
             std::cout << "\n";
+            if(base > 64){
+                std::cout << "Choose a base smaller than 64";
+            }
             if(base == 1){
                 std::vector<char> result = base_1(num);
                 for(const auto &digit : result){
                     std::cout << digit;
                 }
                 std::cout << "\n";
-            } else {
-                std::vector<int> result = base_natural(num, base_num, base);
-                std::string strresult = vector2str(result);
+            } 
+            else{
+                auto result_pair = base_natural(num, base_num, base);
+                std::vector<int> result = result_pair.first;
+                std::string result_str = result_pair.second;
                 
-                std::cout << "Here's your number in base " << base << ": " << strresult << '\n';
+                if(base >= 11 && base <= 64){
+                    std::cout << "Here's your number in base " << base << ": " << result_str << '\n';
+                } 
+                else{
+                    std::string strresult = vector2str(result);
+                    std::cout << "Here's your number in base " << base << ": " << strresult << '\n';
+                }
             }
-            std::cout << "\n********************************\n";
             break;
         case 'Z':
             std::cout << "This code doesn't suport integer set yet\n";
@@ -135,11 +153,10 @@ int main(){
         
                 std::cout << "Here's your number in base " << numerator << "/" << denominator << ": " << strresult << '\n'; 
             }
-            
-            std::cout << "\n********************************\n";
             break;
         default:
             std::cout << "Digit a valid number set\n";
     }
+    std::cout << "\n********************************\n";
     return 0;
 }
