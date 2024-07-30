@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/573970c8-59bd-445f-8326-d4110df861ff)# Base Converter
+# Base Converter
 
 Convert a real number of base x to base y
 
